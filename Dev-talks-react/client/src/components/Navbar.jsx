@@ -22,9 +22,9 @@ const Navbar = () => {
            <span className="post-link"><Link className="link" to="/?cat=chatgpt"><h5>ChatGPT</h5></Link></span>
           <span className="user-link">{currentUser?.userName}</span>
           {currentUser ? (
-            <span onClick={logout}>Logout</span>
+            <span className="user-link"  onClick={logout}>Logout</span>
           ) : (
-            <Link className="link" to="/login">
+            <Link className="user-link" to="/login">
               Login
             </Link>
           )}

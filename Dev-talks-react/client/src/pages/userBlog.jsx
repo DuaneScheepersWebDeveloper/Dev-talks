@@ -6,12 +6,61 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
 const UserBlog = () => {
-  const [value, setValue] = useState("");
-  console.log(value);
+  const state = useLocation().state;
+
+  const [value, setValue] = useState(state?.title || "");
+  const [title, setTitle] = useState(state?.description || "");
+  const [file, setFile] = useState(null);
+  const [cat, setCat] = useState(state?.cat || "");
+
+  const navigate = useNavigate();
+
+  const upload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post("/upload", formData);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    const imgUrl = await upload();
+
+    try {
+      state
+        ? await axios.put(`/posts/${state.id}`, {
+            title,
+            description: value,
+            cat,
+            img: file ? imgUrl : "",
+          })
+        : await axios.post(`/posts/`, {
+            title,
+            description: value,
+            cat,
+            img: file ? imgUrl : "",
+            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+          });
+          navigate("/")
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
   return (
     <div className="userBlog">
       <div className="content">
-        <input type="text" placeholder="Title" />
+        <input 
+        type="text" 
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        />
         <div className="editorContainer">
           <ReactQuill
             className="editor"
@@ -30,35 +79,67 @@ const UserBlog = () => {
           <span>
             <b>Visibility:</b> Public
           </span>
-          <input style={{ display: "none" }} type="file" name="" id="file" />
+          <input 
+          style={{ display: "none" }} 
+          type="file" name="" 
+          id="file"
+          onChange={(e) => setFile(e.target.files[0])} />
           <label className="file" htmlFor="file">
             Upload Image
           </label>
           <div className="buttons">
-            <button>Save as a draft</button>
-            <button>Update</button>
+            {/* <button>Save as a draft</button> */}
+            <button onClick={handleClick}>Publish</button>
           </div>
         </div>
         <div className="item">
           <h1>Category</h1>
           <div className="cat">
             {/* People */}
-            <input type="radio" name="cat" value="people" id="people" />
+            <input 
+            type="radio" 
+            name="cat" 
+            value="people" 
+            id="people"
+            checked={cat === "people"}
+            onChange={(e) => setCat(e.target.value)}
+            />
             <label htmlFor="people">People</label>
           </div>
           <div className="cat">
             {/* Technology */}
-            <input type="radio" name="cat" value="technology" id="technology" />
+            <input 
+            type="radio" 
+            name="cat" 
+            value="technology" 
+            id="technology"
+            checked={cat === "technology"}
+            onChange={(e) => setCat(e.target.value)}
+            />
             <label htmlFor="people">Technology</label>
           </div>
           <div className="cat">
             {/* Code */}
-            <input type="radio" name="cat" value="code" id="code" />
+            <input 
+            type="radio" 
+            name="cat" 
+            value="code" 
+            id="code" 
+            checked={cat === "code"}
+            onChange={(e) => setCat(e.target.value)}
+            />
             <label htmlFor="code">Code</label>
           </div>
           <div className="cat">
             {/* ChatGPT */}
-            <input type="radio" name="cat" value="chatgpt" id="chatgpt" />
+            <input 
+            type="radio" 
+            name="cat" 
+            value="chatgpt" 
+            id="chatgpt"
+            checked={cat === "chatgpt"}
+            onChange={(e) => setCat(e.target.value)}
+            />
             <label htmlFor="chatgpt">ChatGPT</label>
           </div>
         </div>

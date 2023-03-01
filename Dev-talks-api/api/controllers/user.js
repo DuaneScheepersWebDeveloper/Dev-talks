@@ -1,3 +1,6 @@
-export const addPost = (req, res) => {
-    res.json("post from controller");
-};
+import express from "express"
+
+const router = express.Router()
+
+
+export default router
