@@ -2,13 +2,23 @@ import { db } from "../config/db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+//---------------------------------------
+//This is our authentication controller that allows functionality to be able 
+//to log in and log out of our application.
+//our routes calls this file
+//---------------------------------------
+//REGISTER. 
+
 export const register = (req, res) => {
   const q = "SELECT * FROM user WHERE email = ? OR userName =?";
+    //includes your username, password and email address in your user table on our db
   db.query(q, [req.body.email, req.body.name], (err, data) => {
     if (err) return res.json(err);
     if (data.length) return res.status(409).json("User already exists");
 
     //encryption
+    // bcrypt is hashing library that hashes a password before its pushed to 
+    // our mySQL database
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
@@ -25,6 +35,8 @@ export const register = (req, res) => {
     })
   });
 };
+
+//LOGIN
 export const login = (req, res) => {
   //CHECK USER
 
@@ -42,7 +54,7 @@ export const login = (req, res) => {
 
     if (!isPasswordCorrect)
       return res.status(400).json("Wrong username or password!");
-
+      //THis app uses tokens to keep track of users logged in and logged out
     const token = jwt.sign({ id: data[0].id }, "jwtkey");
     const { password, ...other } = data[0];
 
@@ -54,7 +66,7 @@ export const login = (req, res) => {
       .json(other);
   });  
 };
-
+//LOGOUT
 export const logout = (req, res) => {
   res.clearCookie("access_token",{
     sameSite:"none",

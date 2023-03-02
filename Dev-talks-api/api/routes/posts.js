@@ -1,4 +1,5 @@
 import express from "express";
+//All our CRUD operations
 import {
   addPost,
   deletePost,

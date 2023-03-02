@@ -5,11 +5,14 @@ import postRoutes from "./routes/posts.js";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 
+//EXPRESS
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 
+//STORAGE
+//multer temporarily stores info into our frontend to be able to access your uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, "./../../Dev-talks-react/client/public/uploads");

@@ -1,6 +1,11 @@
 import { db } from "../config/db.js";
 import jwt from "jsonwebtoken";
-
+//---------------------------------------
+//This is implements the CRUD functionality for the posts part of the app 
+//
+//our routes calls this file
+//---------------------------------------
+//GETPOSTS
 export const getPosts = (req, res) => {
   const q = req.query.cat
     ? "SELECT * FROM posts WHERE cat=?"
@@ -12,7 +17,7 @@ export const getPosts = (req, res) => {
     return res.status(200).json(data);
   });
 };
-
+//GET POST --R
 export const getPost = (req, res) => {
   const q =
     "SELECT p.id, `userName`, `title`, `description`, p.img, u.img AS userImg, `cat`,`date` FROM user u JOIN posts p ON u.id = p.uid WHERE p.id = ? ";
@@ -23,7 +28,7 @@ export const getPost = (req, res) => {
     return res.status(200).json(data[0]);
   });
 };
-
+//ADD -- C
 export const addPost = (req, res) => {
   const token = req.cookies.access_token;
   if (!token) return res.status(401).json("Not authenticated!");
@@ -49,7 +54,7 @@ export const addPost = (req, res) => {
     });
   });
 };
-
+//DELETE - D
 export const deletePost = (req, res) => {
   const token = req.cookies.access_token;
   if (!token) return res.status(401).json("Not authenticated!");
@@ -67,7 +72,7 @@ export const deletePost = (req, res) => {
     });
   });
 };
-
+//UPDATE -- U
 export const updatePost = (req, res) => {
   const token = req.cookies.access_token;
   if (!token) return res.status(401).json("Not authenticated!");

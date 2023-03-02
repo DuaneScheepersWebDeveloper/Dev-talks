@@ -11,7 +11,7 @@ To be able to get started on the the project. In the Api project and React front
 //--------------------------------------------------------------------------------
 ## Tech Stack
 
-**Client:** React, 
+**Client:** React,SCSS
 
 **Server:** Node, Express (Restful API)
 **Database** MySQL
